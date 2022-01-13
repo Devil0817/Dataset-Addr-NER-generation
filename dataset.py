@@ -49,7 +49,7 @@ f_list = {f1:question_prov_city_list,f2:question_city_list,f31:question_district
           f6:question_community_list}
           #f41:question_road_list,f42:question_community_list,f5:question_poi_list,f6:question_num_list}
 
-f_address = open("train_beijing_demo.txt", "r+",encoding="utf-8")
+f_address = open("full_standard_address.txt", "r+",encoding="utf-8")
 
 
 
