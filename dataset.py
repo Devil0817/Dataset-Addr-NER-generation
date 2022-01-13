@@ -50,7 +50,6 @@ def list_constrct(file):
 		for line in key:
 			#print(line)
 			value.append(line)
-	#print(question_prov_city_list)
 
 def supplyment(cur_str,tag_str,addr,diction,diction_sort):
 	if 'intersection' in diction.keys():
