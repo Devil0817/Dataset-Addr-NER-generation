@@ -22,22 +22,22 @@ question_error_list = []
 #question_fill_replace = {'@':'city','#':'town','&':'district','-':'district2','*':'town2','+':'community','/':'road'}
 question_fill_replace = {'@':'city','#':'town','&':'district','/':'road','+':'roadno'}
 
-f1 = open("1-开头.txt", "r+",encoding="utf-8")
-f2 = open("2-市.txt", "r+",encoding="utf-8")
-f31 = open("3-区.txt", "r+",encoding="utf-8")
-f32 = open("3-县.txt", "r+",encoding="utf-8")
-f41 = open("4-镇.txt", "r+",encoding="utf-8")
-f42 = open("4-乡.txt", "r+",encoding="utf-8")
-f43 = open("4-街道.txt", "r+",encoding="utf-8")
-f51 = open("5-路.txt", "r+",encoding="utf-8")
-f52 = open("5-巷.txt", "r+",encoding="utf-8")
-f53 = open("5-街.txt", "r+",encoding="utf-8")
-f54 = open("5-路号.txt", "r+",encoding="utf-8")
-f6 = open("6-小区.txt", "r+",encoding="utf-8")
-f7 = open("7-详细.txt", "r+",encoding="utf-8")
+f1 = open("./question-and-answer sentences database/1-开头.txt", "r+",encoding="utf-8")
+f2 = open("./question-and-answer sentences database/2-市.txt", "r+",encoding="utf-8")
+f31 = open("./question-and-answer sentences database/3-区.txt", "r+",encoding="utf-8")
+f32 = open("./question-and-answer sentences database/3-县.txt", "r+",encoding="utf-8")
+f41 = open("./question-and-answer sentences database/4-镇.txt", "r+",encoding="utf-8")
+f42 = open("./question-and-answer sentences database/4-乡.txt", "r+",encoding="utf-8")
+f43 = open("./question-and-answer sentences database/4-街道.txt", "r+",encoding="utf-8")
+f51 = open("./question-and-answer sentences database/5-路.txt", "r+",encoding="utf-8")
+f52 = open("./question-and-answer sentences database/5-巷.txt", "r+",encoding="utf-8")
+f53 = open("./question-and-answer sentences database/5-街.txt", "r+",encoding="utf-8")
+f54 = open("./question-and-answer sentences database/5-路号.txt", "r+",encoding="utf-8")
+f6 = open("./question-and-answer sentences database/6-小区.txt", "r+",encoding="utf-8")
+f7 = open("./question-and-answer sentences database/7-详细.txt", "r+",encoding="utf-8")
 
-f_ty = open("fs_tongyin4.txt", "r+",encoding="utf-8")
-f_error = open("random_error.txt", "r+",encoding="utf-8")
+f_ty = open("./question-and-answer sentences database/fs_tongyin4.txt", "r+",encoding="utf-8")
+f_error = open("./question-and-answer sentences database/random_error.txt", "r+",encoding="utf-8")
 
 '''
 f32 = open("3-2-镇.txt", "r+",encoding="utf-8")
@@ -48,8 +48,8 @@ f6 = open("6-号.txt", "r+",encoding="utf-8")
 '''
 
 
-f_w = open("dialogue_sample.txt", "w+",encoding="utf-8")
-f_tag = open("tag_sample.txt", "w+",encoding="utf-8")
+f_w = open("./data/dialogue_sample.txt", "w+",encoding="utf-8")
+f_tag = open("./data/tag_sample.txt", "w+",encoding="utf-8")
 f_list = {f1:question_prov_city_list,f2:question_city_list,f31:question_district_list1,f32:question_district_list2,
           f41:question_town_list1,f42:question_town_list2,f43:question_town_list3,
           f51:question_road_list1,f52:question_road_list2,f53:question_road_list3,f54:question_road_list4,
