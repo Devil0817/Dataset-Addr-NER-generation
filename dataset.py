@@ -16,32 +16,47 @@ question_road_list4 = []
 question_community_list = []
 question_poi_list = []
 question_num_list = []
+question_detail_list = []
+question_error_list = []
 
 #question_fill_replace = {'@':'city','#':'town','&':'district','-':'district2','*':'town2','+':'community','/':'road'}
 question_fill_replace = {'@':'city','#':'town','&':'district','/':'road','+':'roadno'}
 
-f1 = open("question-and-answer sentences database/1-开头.txt", "r+",encoding="utf-8")
-f2 = open("question-and-answer sentences database/2-市.txt", "r+",encoding="utf-8")
-f31 = open("question-and-answer sentences database/3-区.txt", "r+",encoding="utf-8")
-f32 = open("question-and-answer sentences database/3-县.txt", "r+",encoding="utf-8")
-f41 = open("question-and-answer sentences database/4-镇.txt", "r+",encoding="utf-8")
-f42 = open("question-and-answer sentences database/4-乡.txt", "r+",encoding="utf-8")
-f43 = open("question-and-answer sentences database/4-街道.txt", "r+",encoding="utf-8")
-f51 = open("question-and-answer sentences database/5-路.txt", "r+",encoding="utf-8")
-f52 = open("question-and-answer sentences database/5-巷.txt", "r+",encoding="utf-8")
-f53 = open("question-and-answer sentences database/5-街.txt", "r+",encoding="utf-8")
-f54 = open("question-and-answer sentences database/5-路号.txt", "r+",encoding="utf-8")
-f6 = open("question-and-answer sentences database/6-小区.txt", "r+",encoding="utf-8")
+f1 = open("1-开头.txt", "r+",encoding="utf-8")
+f2 = open("2-市.txt", "r+",encoding="utf-8")
+f31 = open("3-区.txt", "r+",encoding="utf-8")
+f32 = open("3-县.txt", "r+",encoding="utf-8")
+f41 = open("4-镇.txt", "r+",encoding="utf-8")
+f42 = open("4-乡.txt", "r+",encoding="utf-8")
+f43 = open("4-街道.txt", "r+",encoding="utf-8")
+f51 = open("5-路.txt", "r+",encoding="utf-8")
+f52 = open("5-巷.txt", "r+",encoding="utf-8")
+f53 = open("5-街.txt", "r+",encoding="utf-8")
+f54 = open("5-路号.txt", "r+",encoding="utf-8")
+f6 = open("6-小区.txt", "r+",encoding="utf-8")
+f7 = open("7-详细.txt", "r+",encoding="utf-8")
 
-f_w = open("data_dialogue.txt", "w+",encoding="utf-8")
-f_tag = open("tag_dialogue.txt", "w+",encoding="utf-8")
+f_ty = open("fs_tongyin4.txt", "r+",encoding="utf-8")
+f_error = open("random_error.txt", "r+",encoding="utf-8")
+
+'''
+f32 = open("3-2-镇.txt", "r+",encoding="utf-8")
+f41 = open("4-1-街道路.txt", "r+",encoding="utf-8")
+f42 = open("4-2-村.txt", "r+",encoding="utf-8")
+f5 = open("5-小区.txt", "r+",encoding="utf-8")
+f6 = open("6-号.txt", "r+",encoding="utf-8")
+'''
+
+
+f_w = open("dialogue_sample.txt", "w+",encoding="utf-8")
+f_tag = open("tag_sample.txt", "w+",encoding="utf-8")
 f_list = {f1:question_prov_city_list,f2:question_city_list,f31:question_district_list1,f32:question_district_list2,
           f41:question_town_list1,f42:question_town_list2,f43:question_town_list3,
           f51:question_road_list1,f52:question_road_list2,f53:question_road_list3,f54:question_road_list4,
-          f6:question_community_list}
+          f6:question_community_list,f7:question_detail_list,f_error:question_error_list}
           #f41:question_road_list,f42:question_community_list,f5:question_poi_list,f6:question_num_list}
 
-f_address = open("full_standard_address.txt", "r+",encoding="utf-8")
+f_address = open("fs_addr2.txt", "r+",encoding="utf-8")
 
 
 
@@ -50,6 +65,7 @@ def list_constrct(file):
 		for line in key:
 			#print(line)
 			value.append(line)
+	#print(question_prov_city_list)
 
 def supplyment(cur_str,tag_str,addr,diction,diction_sort):
 	if 'intersection' in diction.keys():
@@ -190,6 +206,9 @@ def f2_data(diction,diction_sort):
 		if random.randint(0,2) == 0:
 			city_str += '在'
 			tag_str += 'O '
+		if random.randint(0,4) == 0:
+			city_str += diction[addr][0]
+			tag_str += 'O '
 		city_str += diction[addr]
 		for i in range(len(diction[addr])):
 			if i == 0:
@@ -202,7 +221,7 @@ def f2_data(diction,diction_sort):
 		f_tag.write(tag_str[:-1]+'\n')
 
 #district 区县
-def f3_data(diction,diction_sort):
+def f3_data(diction,diction_sort,error_addr):
 	addr = 'district'
 	if addr in diction.keys():
 		district_1 = [] #symbol
@@ -270,24 +289,114 @@ def f3_data(diction,diction_sort):
 		if random.randint(0,2) == 0:
 			district_str += '在'
 			tag_str += 'O '
-		
-		district_str += diction[addr]
-		for i in range(len(diction[addr])):
-			if i == 0:
-				tag_str += 'B-'+ addr + ' '
-			elif i == len(diction[addr])-1:
-				tag_str += 'E-'+ addr + ' '
-			else:
-				tag_str += 'I-'+ addr + ' '
-		district_str,tag_str = supplyment(district_str,tag_str,addr,diction,diction_sort)
+		if random.randint(0,2) == 0:
+			district_str += '在,'
+			tag_str += 'O O '
 		if random.randint(0,5) == 0:
-			district_str += '嗯'
+			district_str += '那个'
+			tag_str += 'O O '
+
+		
+		if random.randint(0,2) == 0:
+			district_str += diction[addr][0]
 			tag_str += 'O '
-		f_w.write(district_str +'\n')
-		f_tag.write(tag_str[:-1]+'\n')
+			if random.randint(0,3) == 0:
+				district_str += ','
+			tag_str += 'O '
+		if random.randint(0,1) == 0:
+			district_str += diction[addr]
+			for i in range(len(diction[addr])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(diction[addr])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			district_str,tag_str = supplyment(district_str,tag_str,addr,diction,diction_sort)
+			if random.randint(0,5) == 0:
+				district_str += '嗯'
+				tag_str += 'O '
+			f_w.write(district_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+		else:
+			if random.randint(0,3) == 0:
+				district_str += error_addr['district'][random.randint(0,len(error_addr['district'])-1)][0]
+				tag_str += 'O '
+			random_district = random.randint(0,len(error_addr['district'])-1)	
+			district_str += error_addr['district'][random_district]
+			for i in range(len(error_addr['district'][random_district])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(error_addr['district'][random_district])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			district_str,tag_str = supplyment(district_str,tag_str,addr,diction,diction_sort)
+
+			if random.randint(0,3) == 0:
+				district_str += error_addr['district'][random_district][-1]
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				district_str += '啊'
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				district_str += '额'
+				tag_str += 'O '
+			f_w.write(district_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+
+			fe_len = len(question_error_list)
+			roadno_random_ask = random.randint(0,fe_len-1)
+			question_write = question_error_list[roadno_random_ask]
+			tag_str = ''
+			if '#' in question_write:
+				random_district = random.randint(0,len(error_addr['district'])-1)
+				question_write = question_write.replace('#',error_addr['district'][random_district])
+				for i in question_write:
+					if i == error_addr['district'][random_district][0]:
+						tag_str += 'B-' + addr + ' '
+					elif i == error_addr['district'][random_district][-1]:
+						tag_str += 'E-' + addr + ' '
+					elif i in error_addr['district'][random_district][1:-1]:
+						tag_str += 'I-' + addr + ' '
+					else:
+						tag_str += 'O' + ' '
+			else:
+				tag_str = ('O' + ' ') * len(question_write)
+			f_w.write(question_write)
+			f_tag.write(tag_str[:-1]+'\n')
+
+			district_str = ''
+			tag_str = ''
+			if random.randint(0,3) == 0:
+				district_str += '啊'
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				district_str += '不,'
+				tag_str += 'O O '
+			district_str += diction[addr]
+			for i in range(len(diction[addr])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(diction[addr])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			district_str,tag_str = supplyment(district_str,tag_str,addr,diction,diction_sort)
+			if random.randint(0,5) == 0:
+				district_str += '嗯'
+				tag_str += 'O '
+			if random.randint(0,5) == 0:
+				district_str += '啊'
+				tag_str += 'O '
+			f_w.write(district_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+
+
+
 
 #town 乡镇街道
-def f4_data(diction,diction_sort):
+def f4_data(diction,diction_sort,error_addr):
 	addr = 'town'
 	if addr in diction.keys():
 		town_1 = [] #symbol
@@ -361,25 +470,111 @@ def f4_data(diction,diction_sort):
 		if random.randint(0,2) == 0:
 			town_str += '在'
 			tag_str += 'O '
+		if random.randint(0,3) == 0:
+			town_str += '在,'
+			tag_str += 'O O '
+		if random.randint(0,2) == 0:
+			town_str += '额'
+			tag_str += 'O '
 		if random.randint(0,5) == 0:
 			town_str += '在那个'
 			tag_str += 'O '*3
 
-
-		town_str += diction[addr]
-		for i in range(len(diction[addr])):
-			if i == 0:
-				tag_str += 'B-'+ addr + ' '
-			elif i == len(diction[addr])-1:
-				tag_str += 'E-'+ addr + ' '
-			else:
-				tag_str += 'I-'+ addr + ' '
-		town_str,tag_str = supplyment(town_str,tag_str,addr,diction,diction_sort)
-		if random.randint(0,5) == 0:
-			town_str += '嗯'
+		if random.randint(0,3) == 0:
+			town_str += diction[addr][0]
 			tag_str += 'O '
-		f_w.write(town_str +'\n')
-		f_tag.write(tag_str[:-1]+'\n')
+			if random.randint(0,3) == 0:
+				town_str += ','
+			tag_str += 'O '
+
+		if random.randint(0,2) == 0:
+			town_str += diction[addr]
+			for i in range(len(diction[addr])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(diction[addr])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			town_str,tag_str = supplyment(town_str,tag_str,addr,diction,diction_sort)
+			if random.randint(0,5) == 0:
+				town_str += '嗯'
+				tag_str += 'O '
+			f_w.write(town_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+		else:
+			if random.randint(0,3) == 0:
+				town_str += error_addr['town'][random.randint(0,len(error_addr['town'])-1)][0]
+				tag_str += 'O '
+			random_town = random.randint(0,len(error_addr['town'])-1)	
+			town_str += error_addr['town'][random_town]
+			for i in range(len(error_addr['town'][random_town])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(error_addr['town'][random_town])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			town_str,tag_str = supplyment(town_str,tag_str,addr,diction,diction_sort)
+
+			if random.randint(0,3) == 0:
+				town_str += error_addr['town'][random_town][-1]
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				town_str += '啊'
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				town_str += '额'
+				tag_str += 'O '
+			f_w.write(town_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+
+			fe_len = len(question_error_list)
+			roadno_random_ask = random.randint(0,fe_len-1)
+			question_write = question_error_list[roadno_random_ask]
+			tag_str = ''
+			if '#' in question_write:
+				random_town = random.randint(0,len(error_addr['town'])-1)
+				question_write = question_write.replace('#',error_addr['town'][random_town])
+				for i in question_write:
+					if i == error_addr['town'][random_town][0]:
+						tag_str += 'B-' + addr + ' '
+					elif i == error_addr['town'][random_town][-1]:
+						tag_str += 'E-' + addr + ' '
+					elif i in error_addr['town'][random_town][1:-1]:
+						tag_str += 'I-' + addr + ' '
+					else:
+						tag_str += 'O' + ' '
+			else:
+				tag_str = ('O' + ' ') * len(question_write)
+			f_w.write(question_write)
+			f_tag.write(tag_str[:-1]+'\n')
+
+			town_str = ''
+			tag_str = ''
+			if random.randint(0,3) == 0:
+				town_str += '啊'
+				tag_str += 'O '
+			if random.randint(0,3) == 0:
+				town_str += '不,'
+				tag_str += 'O O '
+			town_str += diction[addr]
+			for i in range(len(diction[addr])):
+				if i == 0:
+					tag_str += 'B-'+ addr + ' '
+				elif i == len(diction[addr])-1:
+					tag_str += 'E-'+ addr + ' '
+				else:
+					tag_str += 'I-'+ addr + ' '
+			town_str,tag_str = supplyment(town_str,tag_str,addr,diction,diction_sort)
+			if random.randint(0,5) == 0:
+				town_str += '嗯'
+				tag_str += 'O '
+			if random.randint(0,5) == 0:
+				town_str += '啊'
+				tag_str += 'O '
+			f_w.write(town_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
 
 #roadno
 def f5_roadno_data(flag,diction_):
@@ -418,6 +613,9 @@ def f5_roadno_data(flag,diction_):
 	if random.randint(0,5) == 0:
 		roadno_str += '在那个'
 		tag_str += 'O '*3
+	if random.randint(0,2) == 0:
+		roadno_str += '额,'
+		tag_str += 'O O '
 
 	roadno_str += diction_['road']
 	for i in range(len(diction_['road'])):
@@ -443,7 +641,7 @@ def f5_roadno_data(flag,diction_):
 	f_tag.write(tag_str[:-1]+'\n')
 
 #road 路巷街 
-def f5_data(diction,diction_sort):
+def f5_data(diction,diction_sort,error_addr):
 	addr = 'road'
 	if addr in diction.keys():
 		road_1 = [] #symbol
@@ -503,9 +701,12 @@ def f5_data(diction,diction_sort):
 		if random.randint(0,5) == 0:
 			road_str += '在那个'
 			tag_str += 'O '*3
+		if random.randint(0,3) == 0:
+			road_str += '嗯,'
+			tag_str += 'O O '
 
 		if 'town' in diction.keys():
-			if random.randint(0,1) == 0:
+			if random.randint(0,2) == 0:
 				road_str += diction['town']
 				for i in range(len(diction['town'])):
 					if i == 0:
@@ -514,7 +715,20 @@ def f5_data(diction,diction_sort):
 						tag_str += 'E-'+ 'town' + ' '
 					else:
 						tag_str += 'I-'+ 'town' + ' '
-		
+		if random.randint(0,0) == 0:
+			random_road_num = random.randint(0,len(error_addr['road'])-1)
+			random_road = error_addr['road'][random_road_num]
+			print('!!:',random_road)
+			add_road = random.randint(0,len(random_road)-1)
+			road_str += random_road[:add_road]
+			tag_str += 'O '* add_road
+			if random.randint(0,3) == 0:
+				road_str += ','
+				tag_str += 'O '
+			if random.randint(0,5) == 0:
+				road_str += '不对'
+				tag_str += 'O O '
+
 		road_str += diction[addr]
 		for i in range(len(diction[addr])):
 			if i == 0:
@@ -560,7 +774,7 @@ def f5_data(diction,diction_sort):
 			if diction_sort['road'] + 1 == diction_sort['roadno']:
 				f5_roadno_data(roadno_flag,diction)
 
-def f6_data(diction,diction_sort):
+def f6_data(diction,diction_sort,error_addr):
 	if ('community' in diction.keys()) or ('poi' in diction.keys()) or ('subpoi' in diction.keys()) or ('devzone' in diction.keys()) or ('houseno' in diction.keys()) or ('cellno' in diction.keys()) or ('floorno' in diction.keys()):
 		f6_len = len(question_community_list)
 		community_random_ask = random.randint(0,f6_len-1)
@@ -576,6 +790,7 @@ def f6_data(diction,diction_sort):
 		if random.randint(0,5) == 0:
 			cur_str += '在那个'
 			tag_str += 'O '*3
+		addr_flag = ''
 
 		if 'community' in diction.keys():
 			poi_list = ['community']
@@ -592,6 +807,10 @@ def f6_data(diction,diction_sort):
 					else:
 						tag_str += 'I-'+ 'community' + ' '
 				cur_str,tag_str = supplyment(cur_str,tag_str,p,diction,diction_sort)
+			if random.randint(0,2) == 0:
+				cur_str += ','
+				tag_str += 'O '
+			addr_flag = 'community'
 		if 'devzone' in diction.keys():
 			cur_str += diction['devzone']
 			for i in range(len(diction['devzone'])):
@@ -602,9 +821,10 @@ def f6_data(diction,diction_sort):
 				else:
 					tag_str += 'I-'+ 'devzone' + ' '
 				cur_str,tag_str = supplyment(cur_str,tag_str,'devzone',diction,diction_sort)
-		if random.randint(0,2) == 0:
-			cur_str += ','
-			tag_str += 'O '
+			if random.randint(0,2) == 0:
+				cur_str += ','
+				tag_str += 'O '
+			addr_flag = 'devzone'
 		if 'poi' in diction.keys():
 			poi_list = ['poi']
 			for x in diction.keys():
@@ -620,6 +840,10 @@ def f6_data(diction,diction_sort):
 					else:
 						tag_str += 'I-'+ 'poi' + ' '
 				cur_str,tag_str = supplyment(cur_str,tag_str,p,diction,diction_sort)
+			if random.randint(0,2) == 0:
+				cur_str += '额,'
+				tag_str += 'O O '
+			addr_flag = 'poi'
 		if 'subpoi' in diction.keys():
 			poi_list = ['subpoi']
 			for x in diction.keys():
@@ -635,42 +859,181 @@ def f6_data(diction,diction_sort):
 					else:
 						tag_str += 'I-'+ 'subpoi' + ' '
 				cur_str,tag_str = supplyment(cur_str,tag_str,p,diction,diction_sort)
+			addr_flag = 'subpoi'
 
-		if 'houseno' in diction.keys():
-			cur_str += diction['houseno']
-			for i in range(len(diction['houseno'])):
-				if i == 0:
-					tag_str += 'B-'+ 'houseno' + ' '
-				elif i == len(diction['houseno'])-1:
-					tag_str += 'E-'+ 'houseno' + ' '
+
+		if 'houseno' in diction.keys() or 'cellno' in diction.keys() or 'floorno' in diction.keys():
+			if random.randint(0,1) == 0:
+				if 'houseno' in diction.keys():
+					cur_str += diction['houseno']
+					for i in range(len(diction['houseno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'houseno' + ' '
+						elif i == len(diction['houseno'])-1:
+							tag_str += 'E-'+ 'houseno' + ' '
+						else:
+							tag_str += 'I-'+ 'houseno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'houseno',diction,diction_sort)
+				if 'cellno' in diction.keys():
+					cur_str += diction['cellno']
+					for i in range(len(diction['cellno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'cellno' + ' '
+						elif i == len(diction['cellno'])-1:
+							tag_str += 'E-'+ 'cellno' + ' '
+						else:
+							tag_str += 'I-'+ 'cellno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'cellno',diction,diction_sort)
+				if 'floorno' in diction.keys():
+					cur_str += diction['floorno']
+					for i in range(len(diction['floorno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'floorno' + ' '
+						elif i == len(diction['floorno'])-1:
+							tag_str += 'E-'+ 'floorno' + ' '
+						else:
+							tag_str += 'I-'+ 'floorno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'floorno',diction,diction_sort)
+				if random.randint(0,2) == 0:
+					cur_str += '啊'
+					tag_str += 'O '
+				if not cur_str:
+					cur_str += '啊?'
+					tag_str += 'O O '
+				f_w.write(cur_str +'\n')
+				f_tag.write(tag_str[:-1]+'\n')
+				if 'community' in diction.keys():
+					if random.randint(0,2) == 0:
+						fe_len = len(question_error_list)
+						roadno_random_ask = random.randint(0,fe_len-1)
+						question_write = question_error_list[roadno_random_ask]
+						tag_str = ''
+						if '#' in question_write:
+							random_community = random.randint(0,len(error_addr['community'])-1)
+							question_write = question_write.replace('#',error_addr['community'][random_community])
+							for i in question_write:
+								if i == error_addr['community'][random_community][0]:
+									tag_str += 'B-' + 'community' + ' '
+								elif i == error_addr['community'][random_community][-1]:
+									tag_str += 'E-' + 'community' + ' '
+								elif i in error_addr['community'][random_community][1:-1]:
+									tag_str += 'I-' + 'community' + ' '
+								else:
+									tag_str += 'O' + ' '
+						else:
+							tag_str = ('O' + ' ') * len(question_write)
+						f_w.write(question_write)
+						f_tag.write(tag_str[:-1]+'\n')
+						cur_str = ''
+						tag_str = ''
+						if random.randint(0,1) == 0:
+							cur_str += '不,'
+							tag_str += 'O O '
+						if random.randint(0,1) == 0:
+							cur_str += '是'
+							tag_str += 'O '
+						cur_str += diction['community']
+						for i in range(len(diction['community'])):
+							if i == 0:
+								tag_str += 'B-'+ 'community' + ' '
+							elif i == len(diction['community'])-1:
+								tag_str += 'E-'+ 'community' + ' '
+							else:
+								tag_str += 'I-'+ 'community' + ' '
+						if random.randint(0,2) == 0:
+							cur_str += '啊'
+							tag_str += 'O '
+						f_w.write(cur_str +'\n')
+						f_tag.write(tag_str[:-1]+'\n')
+
+
+			else:
+				if not cur_str:
+					cur_str += '啊?'
+					tag_str += 'O O '
+				f_w.write(cur_str +'\n')
+				f_tag.write(tag_str[:-1]+'\n')
+				f7_len = len(question_detail_list)
+				roadno_random_ask = random.randint(0,f7_len-1)
+				question_write = question_detail_list[roadno_random_ask]
+				if '/' in question_write:
+					if addr_flag:
+						question_write = question_write.replace('/',diction[addr_flag])
+					else:
+						question_write = question_write.replace('/','')
+				f_w.write(question_write)
+				tag_str = ''
+				if addr_flag:
+					for i in question_write:
+						if i == diction[addr_flag][0]:
+							tag_str += 'B-' + addr_flag + ' '
+						elif i == diction[addr_flag][-1]:
+							tag_str += 'E-' + addr_flag + ' '
+						elif i in diction[addr_flag][1:-1]:
+							tag_str += 'I-' + addr_flag + ' '
+						else:
+							tag_str += 'O' + ' '
 				else:
-					tag_str += 'I-'+ 'houseno' + ' '
-			cur_str,tag_str = supplyment(cur_str,tag_str,'houseno',diction,diction_sort)
-		if 'cellno' in diction.keys():
-			cur_str += diction['cellno']
-			for i in range(len(diction['cellno'])):
-				if i == 0:
-					tag_str += 'B-'+ 'cellno' + ' '
-				elif i == len(diction['cellno'])-1:
-					tag_str += 'E-'+ 'cellno' + ' '
-				else:
-					tag_str += 'I-'+ 'cellno' + ' '
-			cur_str,tag_str = supplyment(cur_str,tag_str,'cellno',diction,diction_sort)
-		if 'floorno' in diction.keys():
-			cur_str += diction['floorno']
-			for i in range(len(diction['floorno'])):
-				if i == 0:
-					tag_str += 'B-'+ 'floorno' + ' '
-				elif i == len(diction['floorno'])-1:
-					tag_str += 'E-'+ 'floorno' + ' '
-				else:
-					tag_str += 'I-'+ 'floorno' + ' '
-			cur_str,tag_str = supplyment(cur_str,tag_str,'floorno',diction,diction_sort)
-		if random.randint(0,2) == 0:
-			cur_str += '啊'
-			tag_str += 'O '
-		f_w.write(cur_str +'\n')
-		f_tag.write(tag_str[:-1]+'\n')
+					tag_str = ('O ') * len(question_write)
+				f_tag.write(tag_str[:-1]+'\n')
+				cur_str = ''
+				tag_str = ''
+				if random.randint(0,2) == 0:
+					cur_str += '在,'
+					tag_str += 'O O '
+				if random.randint(0,2) == 0:
+					cur_str += '在'
+					tag_str += 'O '
+				if random.randint(0,2) == 0:
+					cur_str += '呃'
+					tag_str += 'O '
+				if 'houseno' in diction.keys():
+					cur_str += diction['houseno']
+					for i in range(len(diction['houseno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'houseno' + ' '
+						elif i == len(diction['houseno'])-1:
+							tag_str += 'E-'+ 'houseno' + ' '
+						else:
+							tag_str += 'I-'+ 'houseno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'houseno',diction,diction_sort)
+				if 'cellno' in diction.keys():
+					cur_str += diction['cellno']
+					for i in range(len(diction['cellno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'cellno' + ' '
+						elif i == len(diction['cellno'])-1:
+							tag_str += 'E-'+ 'cellno' + ' '
+						else:
+							tag_str += 'I-'+ 'cellno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'cellno',diction,diction_sort)
+				if 'floorno' in diction.keys():
+					cur_str += diction['floorno']
+					for i in range(len(diction['floorno'])):
+						if i == 0:
+							tag_str += 'B-'+ 'floorno' + ' '
+						elif i == len(diction['floorno'])-1:
+							tag_str += 'E-'+ 'floorno' + ' '
+						else:
+							tag_str += 'I-'+ 'floorno' + ' '
+					cur_str,tag_str = supplyment(cur_str,tag_str,'floorno',diction,diction_sort)
+				if random.randint(0,2) == 0:
+					cur_str += '啊'
+					tag_str += 'O '
+				if random.randint(0,2) == 0:
+					cur_str += '嗯'
+					tag_str += 'O '
+				if random.randint(0,2) == 0:
+					cur_str += ','
+					tag_str += 'O '
+				f_w.write(cur_str +'\n')
+				f_tag.write(tag_str[:-1]+'\n')
+		else:
+			f_w.write(cur_str +'\n')
+			f_tag.write(tag_str[:-1]+'\n')
+
+
+
 
 	
 if __name__ == '__main__':
@@ -711,12 +1074,21 @@ if __name__ == '__main__':
 		else:
 			print(cur_addr_dic)
 			print(cur_key_sort)
+			error_tag_addr = {}
+			for l in f_ty:
+				if l != '\n':
+					l = l.strip('\n')
+					if l.split(':')[1]:
+						error_tag_addr[l.split(':')[0]] = l.split(':')[1].split(',')
+				else:
+					break
+			print('##',error_tag_addr)
 			f1_data(cur_addr_dic,cur_key_sort)
 			f2_data(cur_addr_dic,cur_key_sort)
-			f3_data(cur_addr_dic,cur_key_sort)
-			f4_data(cur_addr_dic,cur_key_sort)
-			f5_data(cur_addr_dic,cur_key_sort)
-			f6_data(cur_addr_dic,cur_key_sort)
+			f3_data(cur_addr_dic,cur_key_sort,error_tag_addr)
+			f4_data(cur_addr_dic,cur_key_sort,error_tag_addr)
+			f5_data(cur_addr_dic,cur_key_sort,error_tag_addr)
+			f6_data(cur_addr_dic,cur_key_sort,error_tag_addr)
 			f_w.write('\n')
 			f_tag.write('\n')
 			cur_addr_dic = {}
