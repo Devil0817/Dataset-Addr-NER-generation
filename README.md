@@ -1,7 +1,7 @@
 # Dataset-Addr-NER-generation
 __A code for generating a fully-labeled multi-turn dialogue NER dataset with address entities based on full standard Chinese address.__
 
-The link of tianchi competiton's full standard address dataset has failed for some reason, and the dataset is now shown in _full_standard_address,txt_.
+The link of tianchi competiton's full standard address dataset has failed for some reason, and the dataset is now shown in _full_standard_address.txt_.
 
 __Input__: full standard Chinese address dataset, example of the output NER dataset is shown as:
 
